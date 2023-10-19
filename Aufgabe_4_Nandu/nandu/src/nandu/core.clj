@@ -1,7 +1,12 @@
 (ns nandu.core
-  (:gen-class))
+  (:require
+   [nandu.file-reader :as file-reader]
+   [nandu.lighter :as lighter]
+   [nandu.file-writer :as file-writer]))
 
 (defn -main
-  "I don't do a whole lot ... yet."
   [& args]
-  (println "Hello, World!"))
+  (let [file-name (str "resources/nandu" (first args) ".txt")
+        construction (file-reader/read-setup)
+        solution (lighter/light-components construction)]
+    (file-writer/write construction solution)))
