@@ -1,32 +1,30 @@
-(ns nandu.lighter)
+(ns nandu.lighter
+  (:require [clojure.math.combinatorics :as combo]))
 
-(defn- white-component
-  [[sensor-left-active? sensor-right-active?]]
-  (if (and sensor-left-active? sensor-right-active?)
-    [false false]
-    [true true]))
+(defn- light-components
+  [construction lighting-combination]
+  lighting-combination) ;; TODO
 
-(defn- red-component-sensor-left
-  [[sensor-left-active? _sensor-right-active?]]
-  (if sensor-left-active?
-    [true true]
-    [false false]))
-
-(defn- red-component-sensor-right
-  [[_sensor-left-active? sensor-right-active?]]
-  (if sensor-right-active?
-    [true true]
-    [false false]))
-
-(def ^:private blue-component identity)
+(defn- lighting-combinations
+  [construction]
+  (let [torches (->> construction
+                     (first)
+                     (filter (partial re-matches #"Q\d"))
+                     (map keyword))]
+    (->> (for [torch torches]
+           (combo/cartesian-product [torch] [true false]))
+         (reduce combo/cartesian-product)
+         (flatten)
+         (partition 2)
+         (map vec)
+         (partition (count torches))
+         (map (partial into {})))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Public API
 
-(defn light-components
-  [construction]
-  (for [i (range 1 (count construction))]
-    (->> construction
-         (get i)
-         (partition 2 1)
-         )))
+(defn light-components-in-all-combinations
+  [setup]
+  (let [combinations (lighting-combinations (:construction setup))]
+    (for [combination combinations]
+      (light-components (:construction setup) combination))))
