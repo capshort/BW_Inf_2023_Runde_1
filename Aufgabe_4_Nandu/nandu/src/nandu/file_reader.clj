@@ -10,20 +10,20 @@
 (defn- red-component-sensor-left
   [[sensor-left-active? _sensor-right-active?]]
   (if sensor-left-active?
-    [true true]
-    [false false]))
+    [false false]
+    [true true]))
 
 (defn- red-component-sensor-right
   [[_sensor-left-active? sensor-right-active?]]
   (if sensor-right-active?
-    [true true]
-    [false false]))
+    [false false]
+    [true true]))
 
 (defn- blue-component
-  [sensor-left-active? sensor-right-active?]
+  [[sensor-left-active? sensor-right-active?]]
   [sensor-left-active? sensor-right-active?])
 
-(defn match-blocks
+(defn- match-blocks
   [cur-block next-block]
   (cond
     (= [cur-block next-block] ["W" "W"])
@@ -38,7 +38,7 @@
     (= [cur-block next-block] ["B" "B"])
     blue-component))
 
-(defn recognize-components
+(defn- recognize-components
   [result input-to-process]
   (let [current-block (first input-to-process)
         next-block (second input-to-process)]
@@ -53,21 +53,19 @@
   (let [_lines (str/split-lines content)
         
         _dimensions (str/split (first _lines) #" ")
-        width (Integer. (first _dimensions))
-        height (Integer. (second _dimensions))
+        _width (Integer. (first _dimensions))
+        _height (Integer. (second _dimensions))
 
         construction (->> _lines
                           (drop 1)
                           (map #(str/split % #"\s+"))
                           (map #(recognize-components [] %)))]
-    {:width width
-     :height height
-     :construction construction}))
+    construction))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Public API
 
-(defn read-setup
+(defn read-construction
   [file-name]
   (-> file-name
       (slurp)
