@@ -2,7 +2,8 @@
   (:require
    [nandu.file-reader :as file-reader]
    [nandu.lighter :as lighter]
-   #_[nandu.file-writer :as file-writer]))
+   #_[nandu.file-writer :as file-writer])
+  (:gen-class))
 
 (defn -main
   [& args]
