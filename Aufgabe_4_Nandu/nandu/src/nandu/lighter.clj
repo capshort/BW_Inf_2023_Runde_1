@@ -59,13 +59,11 @@
 (defn- sparse-result
   [result-row sparse-row]
   (if (empty? result-row)
-    sparse-row
+    (remove empty? sparse-row)
     (as-> result-row r
       (drop-while (complement string?) r)
       (sparse-result (drop 2 r)
-                     (conj sparse-row
-                           (first r)
-                           (second r))))))
+                     (conj sparse-row (take 2 r))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Public API
@@ -74,5 +72,5 @@
   [construction]
   (let [combinations (lighting-combinations construction)]
     (for [combination combinations]
-      (do (println combination) ;; TODO: don't print but zip with result
-          (sparse-result (light-components construction combination) [])))))
+      (vector combination
+              (sparse-result (light-components construction combination) [])))))
