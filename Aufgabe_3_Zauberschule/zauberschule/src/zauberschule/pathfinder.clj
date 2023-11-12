@@ -136,6 +136,9 @@
        (filter #(is-solution? % floor-map))
        (first)
        (zip-with-instructions)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Public API
        
 (defn optimize-path
   [floor-map {:keys [print-progress?]}]
